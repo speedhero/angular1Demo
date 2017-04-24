@@ -1,0 +1,31 @@
+ <!DOCTYPE HTML>
+ <html ng-app="myInject">
+<head>
+    <meta charset="UTF-8">
+    <!--<script src="./angular.min.js"></script>-->
+    <script src="bower_components/angular/angular.js"></script>
+</head>
+ <body>
+ <h1>定时器对象</h1>
+ <div ng-controller="ClockController">
+     <h5>time: {{clock}}</h5>
+ </div>
+ <h1>Hello {{name}}</h1>
+<script type="text/javascript">
+   function ClockController($scope, $timeout) {
+          var updateClock = function(){
+                  $scope.clock = new Date();
+                  $timeout(function(){
+                          updateClock();
+                     },1000);
+               };
+          updateClock();
+      } ;
+      var myInject = angular.module("myInject",[]);
+      myInject.controller("ClockController",ClockController);
+       myInject.run(function ($rootScope) {
+           $rootScope.name="World!"
+       })
+    </script>
+
+ </body> </html>
