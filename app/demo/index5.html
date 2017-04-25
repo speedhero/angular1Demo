@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<div id="emailEditor" ng-controller="MyController">
+    <input ng-model="to"
+           type="email"
+           placeholder="Recipient" />
+    <textarea ng-model="emailBody"></textarea>
+
+    <div id="emailPreview">
+        <pre>__ previewText __</pre>
+    </div>
+</div>
+<script>
+    angular.module('myApp', ['emailParser'])
+        .controller('MyController',
+            ['$scope', 'EmailParser',
+                function($scope, EmailParser) {
+                    $scope.to = 'ari@fullstack.io';
+                    $scope.emailBody = 'Hello __to__';
+                    // Set up a watch
+                    $scope.$watch('emailBody', function(body) {
+                        if (body) {
+                            $scope.previewText =
+                                EmailParser.parse(body, {
+                                    to: $scope.to
+                                });
+                        }
+                    });
+                }]);
+
+    angular.module('emailParser', [])
+        .config(['$interpolateProvider',
+            function($interpolateProvider) {//重新定义插值字符串
+                $interpolateProvider.startSymbol('__');
+                $interpolateProvider.endSymbol('__');
+            }])
+        .factory('EmailParser', ['$interpolate',//注册服务
+            function($interpolate) {
+                // a service to handle parsing
+                return {
+                    parse: function(text, context) {
+                        var template = $interpolate(text);
+                        return template(context);
+                    }
+                };
+            }]);
+</script>
+</body>
+</html>
