@@ -1,0 +1,26 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<!--隔离作用域-->
+<!--$rootScope 是作用域链的起始点，任何嵌套在 ng-app 内的指令都会继承它。myProperty是属于$rootScope所以自定义指令也继承了它-->
+Outside myDirective: {{ myProperty }}
+<div my-directive ng-init="myProperty = 'wow, this is cool'">
+    Inside myDirective: {{ myProperty }}
+    <input type="text" name="InsidemyDirective" ng-model="myProperty">
+    </div>
+
+        <script>
+            angular.module('myApp', [])
+                .directive('myDirective', function() {
+                    return {
+                        restrict: 'A',
+                        scope: {}
+                    };
+                })
+        </script>
+
+</body>
+</html>

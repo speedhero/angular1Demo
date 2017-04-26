@@ -1,0 +1,50 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<!--继承作用域-->
+<!--  1.当我们将scope设置为true的时候，我们就新创建了一个作用域，只不过这个作用域是继承了我们的父作用域；
+        我觉得可以这样理解，我们新创建的作用域是一个新的作用域，只不过在初始化的时候，用了父作用域的属性和方法去填充我们这个新的作用域。
+        它和父作用域不是同一个作用域。
+      2.当我们将scope设置为false的时候,我们创建的指令和父作用域（其实是同一个作用域）共享同一个model模型，
+         所以在指令中修改模型数据，它会反映到父作用域的模型中。
+      3. AngularJS最强的大的地方之一就是它可以构建组建，无论放在哪里都是可以使用的；
+         这所以可以做到这些，不得不归功于指令的这个属性；当我们将scope设置为{}时，意味着我们创建的一个新的与父作用域隔离的新的作用域，
+         这使我们在不知道外部环境的情况下，就可以正常工作，不依赖外部环境。-->
+     outsidescope: {{ myProperty }}
+    <div ng-controller='MainController'>
+        <div ng-init="myProperty = 'wow, this is cool'"></div>
+        Surrounding scope: {{ myProperty }}
+        <div my-inherit-scope-directive="SomeCtrl">
+            Inside an directive with inherited scope: {{ myProperty }}
+        </div>
+        <div my-directive>
+            Inside myDirective, isolate scope: {{ myProperty }}
+         </div>
+        <input type="text" name="InsidemyDirective" ng-model="myProperty">
+    </div>
+
+<script>
+    angular.module('myApp', [])
+        .controller('MainController', function($scope) {
+      })
+        .directive('myDirective', function() {
+            return {
+                restrict: 'A',
+                scope: {},
+                template: 'Inside myDirective, isolate scope: {{ myProperty }}'
+            };
+        })
+        .directive('myInheritScopeDirective', function() {
+            return {
+                restrict: 'A',
+                scope: true,
+                template: 'Inside myDirective, isolate scope: {{ myProperty }}'
+            };
+        })
+</script>
+
+</body>
+</html>

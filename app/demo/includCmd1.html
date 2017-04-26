@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<h3>ng-switch</h3>
+<div ng-controller="SomeController" ng-switch on="person.name">
+    <input type="text" ng-model="person.name" />
+    <p ng-switch-default>And the winner is</p>
+    <h1 ng-switch-when="Erik">{{ person.name }}</h1>
+</div>
+<hr>
+<h3>ng-if</h3>
+<div ng-if="2 + 2 === 5">
+    Won't see this DOM node, not even in the source code
+</div>
+
+<div ng-if="2 + 2 === 4">
+    Hi, I do exist
+</div>
+
+<!-- type any number into the text field -->
+<hr>
+<div ng-controller="EquationController">
+    <input type="text" ng-model="equation.x" ng-change="change()" />
+    <code>{{ equation.output }}</code>
+</div>
+<script>
+    var app=angular.module('myApp', []);
+
+    app.controller('SomeController', function($scope) {
+            $scope.person = {};
+        });
+
+    app.controller('EquationController', function($scope) {
+            $scope.equation = {};
+            $scope.change = function() {
+                $scope.equation.output = Number($scope.equation.x) + 2;
+            };
+        });
+</script>
+
+</body>
+</html>

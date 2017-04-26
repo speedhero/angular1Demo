@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../bower_components/angular/angular.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("myapp", []);
+        app.directive("hello",function(){
+            return {
+                restrict : "E",
+                controller : function($scope){
+                    $scope.name = "张三";
+                    this.information = {
+                        name : $scope.name,
+                        age : 25,
+                        job : "程序员"
+                    }
+                },
+                link : function(scope){
+
+                }
+            }
+        });
+        app.directive("beautiful",function(){
+            return {
+                restrict : "E",
+                /* require 会将good控制器注入到其值所指定的指令中，并作为当前指令的链接函数的第四个参数*/
+                require : "?good",
+                controller : function(){
+                    this.name = "beautiful";
+                },
+                link : function (scope,element,attrs,good) {
+                    console.log(good.name)
+                }
+            }
+        });
+        app.directive("good",function(){
+            return {
+                restrict : "A",
+                /* require 会将hello控制器注入到其值所指定的指令中，并作为当前指令的链接函数的第四个参数*/
+                require : "?^hello",
+                controller : function(){
+                    this.name = "good";
+                },
+                link : function (scope,element,attrs,hello) {
+                    console.log(hello.information)
+                }
+            }
+        });
+    </script>
+    <style type="text/css">
+    </style>
+</head>
+<body ng-app="myapp">
+
+<hello>
+    <div>hello</div>
+    <beautiful good>
+        beautiful
+    </beautiful>
+</hello>
+</body>
+
+</html>

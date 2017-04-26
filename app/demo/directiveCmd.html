@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../bower_components/angular/angular.js"></script>
+    <script type="text/javascript">
+        var myapp = angular.module("myapp", []);
+        myapp.controller("MyController", ['$scope', function($scope) {
+            $scope.name = "mario";
+            $scope.age = "13";
+            $scope.send = function() {
+                console.log('.............');
+            };
+        }]);
+        myapp.directive("parent", function() {
+            return {
+                restrict: 'E',
+                scope:{},
+                controller: function() {
+                    // this.data = ['1', '2', '3', '4', '5'];
+                    data = ['1', '2', '3', '4', '5'];
+                    this.click = function() {
+                        data.pop();
+                        console.log(data);
+                    };
+                },
+                link: function(scope, elem, attrs) {
+                    scope.name = '123';
+                },
+                template: '<span>{{name}}<div ng-transclude></div></span>',
+                replace: true,
+                transclude: true
+            };
+        });
+        myapp.directive("son", function() {
+            return {
+                restrict: 'E',
+                /*保留指令son，将模板template内容嵌入到当前指令内*/
+                repalce: true,
+                /*require 参数可以被设置为字符串或数组，字符串代表另外一个指令的名字。 require 会将控
+                 制器注入到其值所指定的指令中，并作为当前指令的链接函数的第四个参数*/
+                require: '^?parent',
+                template: '<div ng-click="sonClick()">sonClick</div>',
+                link: function(scope, elem, atts, ctrl) {
+                    scope.sonClick = ctrl.click;
+                    // tmp = ctrl.data;
+                    // console.log(tmp);
+                    // ctrl.data.pop();
+                }
+            };
+        });
+        myapp.directive("daughter", function() {
+            return {
+                restrict: 'E',
+                /*保留指令daughter，将模板template内容嵌入到当前指令内*/
+                repalce: true,
+                require: '^?parent',
+                template: '<div ng-click="daughterClick()">daughterClick</div>',
+                link: function(scope, elem, atts, ctrl) {
+                    scope.daughterClick = ctrl.click;
+                    // tmp = ctrl.data;
+                    // console.log(tmp);
+                }
+            };
+        });
+    </script>
+    <style type="text/css">
+    </style>
+</head>
+<body ng-app="myapp">
+<div class="container" ng-controller="MyController">
+    <parent>
+        <son></son>
+        <daughter></daughter>
+    </parent>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<!--隔离作用域-->
+<!--注意，这里为 myDirective 设置了一个高优先级。由于 ngInit 指令会以非零的优先
+    级运行，这个例子将会优先运行 ngInit 指令，然后才是我们定义的指定，并且这个
+    myProperty 在 $scope 对象中是有效的-->
+<div ng-controller='MainController'>
+    Outside myDirective: {{ myProperty }}
+    <div my-directive ng-init="myProperty = 'wow, this is cool'">
+        <!--隔离作用域无法访问父作用域，且隔离作用域中myProperty没有值所以没有输出-->
+        Inside myDirective: {{ myProperty }}
+    </div>
+    <input type="text" name="InsidemyDirective" ng-model="myProperty">
+</div>
+
+        <script>
+            angular.module('myApp', [])
+                .controller('MainController', function($scope) {
+                })
+                .directive('myDirective', function() {
+                    return {
+                        restrict: 'A',
+                        scope: {},
+                        priority: 100,
+                        template: '<div>Inside myDirective {{ myProperty }}</div>'
+                    };
+                });
+        </script>
+
+</body>
+</html>

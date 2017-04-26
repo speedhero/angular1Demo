@@ -1,0 +1,102 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/foundation/4.3.2/css/foundation.min.css">
+    <script src="../bower_components/angular/angular.js"></script>
+</head>
+<body>
+<form name="signup_form" ng-controller="FormController" ng-submit="submitForm()" novalidate>
+    <div ng-repeat="field in fields" ng-form="signup_form_input">
+        <input type="text"
+               name="dynamic_input"
+               ng-required="field.isRequired"
+               ng-model="field.name"
+               placeholder="{{field.placeholder}}" />
+        <div ng-show="signup_form_input.dynamic_input.$dirty && signup_form_input.dynamic_input.$invalid">
+            <span class="error" ng-show="signup_form_input.dynamic_input.$error.required">The field is required.</span>
+        </div>
+    </div>
+    <button type="submit" ng-disabled="signup_form.$invalid">Submit All</button>
+</form>
+<hr>
+    <div ng-controller="CounterController">
+    <button ng-click="count = count + 1" ng-init="count=0">
+        Increment
+    </button>
+    count: {{count}}
+
+    <button ng-click="decrement()">
+        Decrement
+    </button>
+    </div>
+    <div ng-controller="CityController">
+        <select ng-model="city" ng-options="city.name for city in cities">
+            <option value="">Choose City</option>
+        </select>
+        Best City: {{ city.name }}
+    </div>
+<hr>
+<form ng-submit="submit()" ng-controller="FormController">
+    Enter text and hit enter:
+    <input type="text" ng-model="person.name" name="person.name" />
+    <input type="submit" name="person.name" value="Submit" />
+    <code>people={{people}}</code>
+    <ul ng-repeat="(index, object) in people">
+        <li>{{ object.name }}</li>
+    </ul>
+</form>
+<div ng-controller="LotteryController">
+    <div ng-class="{red: x > 5}" ng-if="x > 5">
+        You won!
+    </div>
+    <button ng-click="x = generateNumber()" ng-init="x = 0">Draw Number</button>
+    <p>Number is: {{ x }}</p>
+</div>
+<script>
+    var app=angular.module('myApp', []);
+    app.controller('FormController', function($scope) {
+            $scope.fields = [
+                {placeholder: 'Username', isRequired: true},
+                {placeholder: 'Password', isRequired: true},
+                {placeholder: 'Email (optional)', isRequired: false}
+            ];
+
+            $scope.submitForm = function() {
+                alert("it works!");
+            };
+        });
+    app.controller('CounterController', function($scope) {
+            $scope.decrement = function() {
+                $scope.count = $scope.count - 1;
+            };
+        });
+    app.controller('CityController', function($scope) {
+            $scope.cities = [
+                {name: 'Seattle'},
+                {name: 'San Francisco'},
+                {name: 'Chicago'},
+                {name: 'New York'},
+                {name: 'Boston'}
+            ];
+        });
+    app.controller('FormController', function($scope) {
+        $scope.person = {
+            name: null
+        };
+        $scope.people = [];
+        $scope.submit = function() {
+            if ($scope.person.name) {
+                $scope.people.push({name: $scope.person.name});
+                $scope.person.name = '';
+            }
+        };
+    });
+    app.controller('LotteryController',function ($scope) {
+        $scope.generateNumber=function () {
+            return Math.floor(Math.random()*10+1)
+        }
+    })
+</script>
+
+</body>
+</html>
